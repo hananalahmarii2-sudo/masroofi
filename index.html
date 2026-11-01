@@ -3,33 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مصروفي - إدارة الحسابات والمصاريف</title>
-  <!-- Tailwind CSS -->
+  <title>مصروفي</title>
+  
+  <!-- PWA Settings & Logo -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-title" content="مصروفي">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10170/10170503.png">
+
+  <!-- Tailwind CSS & Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js for Visualizing Expenses -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Fonts: Cairo -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-      background-color: #f8fafc;
-    }
+    body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
   </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- TOP PWA INSTALL BANNER -->
-  <div id="pwa-banner" class="bg-slate-900 text-white px-4 py-3 shadow-md flex items-center justify-between border-b border-slate-700">
+  <!-- TOP PWA INSTALL BANNER (Will auto-hide if opened as standalone app) -->
+  <div id="pwa-banner" class="bg-slate-900 text-white px-4 py-3 shadow-md flex items-center justify-between border-b border-slate-700 hidden">
     <div class="flex items-center gap-3">
       <div class="bg-emerald-500/20 p-2 rounded-lg text-emerald-400">
         <i data-lucide="smartphone" class="w-5 h-5"></i>
       </div>
       <div>
-        <p class="text-sm font-semibold">هل ترغب في تثبيت التطبيق على الشاشة الرئيسية؟</p>
-        <p class="text-xs text-slate-400">سهولة الوصول بدون حاجة لمتجر التطبيقات</p>
+        <p class="text-sm font-semibold">تثبيت تطبيق "مصروفي"</p>
+        <p class="text-xs text-slate-400">للوصول السريع من الشاشة الرئيسية</p>
       </div>
     </div>
     <div class="flex items-center gap-2">
@@ -55,7 +57,7 @@
           <p class="text-xs text-slate-400">إدارة الحسابات والمصاريف اليومية</p>
         </div>
       </div>
-      <button onclick="openInstallModal()" class="hidden md:flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 transition">
+      <button onclick="openInstallModal()" id="header-install-btn" class="hidden md:flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 transition">
         <i data-lucide="share-2" class="w-4 h-4 text-emerald-400"></i>
         إضافة للشاشة الرئيسية
       </button>
@@ -67,7 +69,6 @@
 
     <!-- SUMMARY CARDS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <!-- Total Balance -->
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-slate-500">الرصيد المتبقي</p>
@@ -78,7 +79,6 @@
         </div>
       </div>
 
-      <!-- Total Income -->
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-slate-500">إجمالي الإيرادات / الدخل</p>
@@ -89,7 +89,6 @@
         </div>
       </div>
 
-      <!-- Total Expenses -->
       <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-slate-500">إجمالي المصاريف</p>
@@ -111,8 +110,6 @@
           تسجيل معاملة جديدة
         </h2>
         <form id="transaction-form" class="space-y-4" onsubmit="handleAddTransaction(event)">
-          
-          <!-- Type Toggle -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1.5">نوع المعاملة</label>
             <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
@@ -121,19 +118,16 @@
             </div>
           </div>
 
-          <!-- Title -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">بيان المعاملة</label>
             <input type="text" id="tx-title" required placeholder="مثال: إيجار، فواتير، تسوق..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
           </div>
 
-          <!-- Amount -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ (ر.س)</label>
             <input type="number" id="tx-amount" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
           </div>
 
-          <!-- Category -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">التصنيف</label>
             <select id="tx-category" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
@@ -145,7 +139,6 @@
             </select>
           </div>
 
-          <!-- Date -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1">التاريخ</label>
             <input type="date" id="tx-date" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
@@ -161,7 +154,6 @@
       <!-- RIGHT COLUMN: CHART & TRANSACTIONS LIST -->
       <div class="lg:col-span-2 space-y-6">
 
-        <!-- CHART CARD -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
             <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
@@ -172,7 +164,6 @@
           </div>
         </div>
 
-        <!-- TRANSACTIONS LIST CARD -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -185,9 +176,7 @@
             </button>
           </div>
 
-          <div id="transactions-list" class="space-y-3">
-            <!-- Dynamic elements will be inserted here -->
-          </div>
+          <div id="transactions-list" class="space-y-3"></div>
         </div>
 
       </div>
@@ -196,7 +185,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
     <p>تطبيق مصروفي &copy; 2026 - إدارة مصاريف وحسابات معربة بالكامل</p>
   </footer>
@@ -217,7 +205,6 @@
       </div>
 
       <div class="space-y-4 text-sm">
-        <!-- iPhone Instructions -->
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
           <div class="flex items-center gap-2 font-bold text-slate-800 text-xs">
             <i data-lucide="apple" class="w-4 h-4 text-slate-700"></i>
@@ -226,11 +213,10 @@
           <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
             <li>اضغط على زر <strong>المشاركة (Share)</strong> بالأسفل.</li>
             <li>اختر <strong>"الإضافة إلى الشاشة الرئيسية"</strong>.</li>
-            <li>اضغط <strong>إضافة</strong> أعلى اليسار.</li>
+            <li>ستجد الاسم تلقائياً <strong>"مصروفي"</strong>، اضغط <strong>إضافة</strong>.</li>
           </ol>
         </div>
 
-        <!-- Android / Huawei Instructions -->
         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
           <div class="flex items-center gap-2 font-bold text-slate-800 text-xs">
             <i data-lucide="smartphone" class="w-4 h-4 text-emerald-600"></i>
@@ -250,15 +236,18 @@
   </div>
 
   <script>
-    // State management
+    // Auto-hide install banner if opened as standalone app from home screen
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      document.getElementById('pwa-banner').style.display = 'none';
+      const headerBtn = document.getElementById('header-install-btn');
+      if (headerBtn) headerBtn.style.display = 'none';
+    }
+
     let transactions = JSON.parse(localStorage.getItem('my_expenses')) || [];
     let currentType = 'expense';
     let chartInstance = null;
 
-    // Set Today's Date
     document.getElementById('tx-date').valueAsDate = new Date();
-
-    // Initialize Lucide Icons
     lucide.createIcons();
 
     function setTransactionType(type) {
@@ -284,19 +273,10 @@
 
       if (!title || isNaN(amount)) return;
 
-      const newTx = {
-        id: Date.now(),
-        title,
-        amount,
-        category,
-        date,
-        type: currentType
-      };
-
+      const newTx = { id: Date.now(), title, amount, category, date, type: currentType };
       transactions.unshift(newTx);
       saveAndRender();
 
-      // Reset form title and amount
       document.getElementById('tx-title').value = '';
       document.getElementById('tx-amount').value = '';
     }
@@ -348,7 +328,6 @@
       transactions.forEach(t => {
         const item = document.createElement('div');
         item.className = 'flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100 hover:bg-slate-100/60 transition';
-        
         const isExpense = t.type === 'expense';
         const colorClass = isExpense ? 'text-rose-600 bg-rose-100/50' : 'text-emerald-600 bg-emerald-100/50';
         const iconName = isExpense ? 'arrow-down-left' : 'arrow-up-right';
@@ -381,15 +360,10 @@
     function renderChart() {
       const ctx = document.getElementById('expenseChart').getContext('2d');
       const expenses = transactions.filter(t => t.type === 'expense');
-
       const categories = ['إيجار وعقارات', 'فواتير ومرافق', 'تسوق ومستلزمات', 'رواتب وإيرادات', 'أخرى'];
-      const dataMap = categories.map(cat => {
-        return expenses.filter(t => t.category === cat).reduce((acc, t) => acc + t.amount, 0);
-      });
+      const dataMap = categories.map(cat => expenses.filter(t => t.category === cat).reduce((acc, t) => acc + t.amount, 0));
 
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
+      if (chartInstance) chartInstance.destroy();
 
       chartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -405,19 +379,11 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                font: { family: 'Cairo', size: 11 }
-              }
-            }
-          }
+          plugins: { legend: { position: 'bottom', labels: { font: { family: 'Cairo', size: 11 } } } }
         }
       });
     }
 
-    // Modal controls
     function openInstallModal() {
       document.getElementById('install-modal').classList.remove('hidden');
       document.getElementById('install-modal').classList.add('flex');
@@ -432,7 +398,6 @@
       document.getElementById('pwa-banner').style.display = 'none';
     }
 
-    // Initial Load
     saveAndRender();
   </script>
 </body>
