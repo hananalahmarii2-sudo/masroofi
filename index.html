@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مصروفي</title>
+  <title>مصاريف - إدارة الحسابات والأصول</title>
   
-  <!-- PWA Settings & Saudi SAR Icon -->
+  <!-- PWA Settings & Saudi Luxury Icon -->
   <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-title" content="مصروفي">
+  <meta name="apple-mobile-web-app-title" content="مصاريف">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/9334/9334587.png">
@@ -30,7 +30,7 @@
         <i data-lucide="smartphone" class="w-5 h-5"></i>
       </div>
       <div>
-        <p class="text-sm font-semibold">تثبيت تطبيق "مصروفي"</p>
+        <p class="text-sm font-semibold">تثبيت تطبيق "مصاريف"</p>
         <p class="text-xs text-slate-400">للوصول السريع من الشاشة الرئيسية</p>
       </div>
     </div>
@@ -45,16 +45,16 @@
     </div>
   </div>
 
-  <!-- HEADER -->
-  <header class="bg-slate-900 text-white py-6 shadow-lg">
+  <!-- HEADER & TABS -->
+  <header class="bg-slate-900 text-white pt-6 pb-4 shadow-lg">
     <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="bg-emerald-500 text-slate-950 p-2.5 rounded-xl font-bold">
           <i data-lucide="wallet" class="w-6 h-6"></i>
         </div>
         <div>
-          <h1 class="text-2xl font-extrabold tracking-wide text-white">مصروفي</h1>
-          <p class="text-xs text-slate-400">إدارة الحسابات والمصاريف اليومية</p>
+          <h1 class="text-2xl font-extrabold tracking-wide text-white">مصاريف</h1>
+          <p class="text-xs text-slate-400">إدارة المصاريف ومتابعة الأصول والأنصبة</p>
         </div>
       </div>
       <button onclick="openInstallModal()" id="header-install-btn" class="hidden md:flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 transition">
@@ -62,131 +62,247 @@
         إضافة للشاشة الرئيسية
       </button>
     </div>
+
+    <!-- MAIN TABS NAVIGATION -->
+    <div class="max-w-4xl mx-auto px-4 mt-6">
+      <div class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+        <button id="tab-btn-expenses" onclick="switchTab('expenses')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2">
+          <i data-lucide="receipt" class="w-4 h-4"></i>
+          المصاريف والدخل
+        </button>
+        <button id="tab-btn-assets" onclick="switchTab('assets')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all text-slate-300 hover:text-white flex items-center justify-center gap-2">
+          <i data-lucide="trending-up" class="w-4 h-4"></i>
+          محفظة الأصول (الأرباح والخسائر)
+        </button>
+      </div>
+    </div>
   </header>
 
   <!-- MAIN CONTAINER -->
   <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
 
-    <!-- SUMMARY CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold text-slate-500">الرصيد المتبقي</p>
-          <h3 id="net-balance" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
-        </div>
-        <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
-          <i data-lucide="scale" class="w-6 h-6"></i>
-        </div>
-      </div>
+    <!-- ==================== SECTION 1: EXPENSES & INCOME ==================== -->
+    <div id="section-expenses" class="space-y-6">
 
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold text-slate-500">إجمالي الإيرادات / الدخل</p>
-          <h3 id="total-income" class="text-2xl font-black text-emerald-600 mt-1">+0.00 ر.س</h3>
-        </div>
-        <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
-          <i data-lucide="trending-up" class="w-6 h-6"></i>
-        </div>
-      </div>
-
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-        <div>
-          <p class="text-xs font-semibold text-slate-500">إجمالي المصاريف</p>
-          <h3 id="total-expenses" class="text-2xl font-black text-rose-600 mt-1">-0.00 ر.س</h3>
-        </div>
-        <div class="bg-rose-50 p-3 rounded-xl text-rose-600">
-          <i data-lucide="trending-down" class="w-6 h-6"></i>
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT GRID -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-      <!-- LEFT COLUMN: ADD TRANSACTION FORM -->
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit">
-        <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-          <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
-          تسجيل معاملة جديدة
-        </h2>
-        <form id="transaction-form" class="space-y-4" onsubmit="handleAddTransaction(event)">
+      <!-- SUMMARY CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">نوع المعاملة</label>
-            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
-              <button type="button" id="btn-type-expense" onclick="setTransactionType('expense')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white text-rose-600 shadow-sm">مصروف</button>
-              <button type="button" id="btn-type-income" onclick="setTransactionType('income')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500">دخل / إيراد</button>
+            <p class="text-xs font-semibold text-slate-500">الرصيد المتبقي</p>
+            <h3 id="net-balance" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
+          </div>
+          <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
+            <i data-lucide="scale" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500">إجمالي الإيرادات / الدخل</p>
+            <h3 id="total-income" class="text-2xl font-black text-emerald-600 mt-1">+0.00 ر.س</h3>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
+            <i data-lucide="arrow-down-left" class="w-6 h-6"></i>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500">إجمالي المصاريف</p>
+            <h3 id="total-expenses" class="text-2xl font-black text-rose-600 mt-1">-0.00 ر.س</h3>
+          </div>
+          <div class="bg-rose-50 p-3 rounded-xl text-rose-600">
+            <i data-lucide="arrow-up-right" class="w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- FORM -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit">
+          <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
+            تسجيل معاملة جديدة
+          </h2>
+          <form id="transaction-form" class="space-y-4" onsubmit="handleAddTransaction(event)">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">نوع المعاملة</label>
+              <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+                <button type="button" id="btn-type-expense" onclick="setTransactionType('expense')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white text-rose-600 shadow-sm">مصروف</button>
+                <button type="button" id="btn-type-income" onclick="setTransactionType('income')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500">دخل / إيراد</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">بيان المعاملة</label>
+              <input type="text" id="tx-title" required placeholder="مثال: إيجار، فواتير، تسوق..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ (ر.س)</label>
+              <input type="number" id="tx-amount" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">التصنيف</label>
+              <select id="tx-category" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
+                <option value="إيجار وعقارات">إيجار وعقارات</option>
+                <option value="فواتير ومرافق">فواتير ومرافق</option>
+                <option value="تسوق ومستلزمات">تسوق ومستلزمات</option>
+                <option value="رواتب وإيرادات">رواتب وإيرادات</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">التاريخ</label>
+              <input type="date" id="tx-date" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              حفظ المعاملة
+            </button>
+          </form>
+        </div>
+
+        <!-- LIST & CHART -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
+              توزيع المصاريف حسب التصنيف
+            </h2>
+            <div class="h-56 relative flex items-center justify-center">
+              <canvas id="expenseChart"></canvas>
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">بيان المعاملة</label>
-            <input type="text" id="tx-title" required placeholder="مثال: إيجار، فواتير، تسوق..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="list" class="w-5 h-5 text-emerald-600"></i>
+                سجل المعاملات
+              </h2>
+              <button onclick="clearAllData()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                مسح الكل
+              </button>
+            </div>
+            <div id="transactions-list" class="space-y-3"></div>
           </div>
+        </div>
 
+      </div>
+    </div>
+
+
+    <!-- ==================== SECTION 2: ASSETS PORTFOLIO ==================== -->
+    <div id="section-assets" class="space-y-6 hidden">
+
+      <!-- ASSETS SUMMARY CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ (ر.س)</label>
-            <input type="number" id="tx-amount" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            <p class="text-xs font-semibold text-slate-500">إجمالي التكلفة (سعر الشراء)</p>
+            <h3 id="assets-total-cost" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
           </div>
+          <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
+            <i data-lucide="coins" class="w-6 h-6"></i>
+          </div>
+        </div>
 
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">التصنيف</label>
-            <select id="tx-category" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
-              <option value="إيجار وعقارات">إيجار وعقارات</option>
-              <option value="فواتير ومرافق">فواتير ومرافق</option>
-              <option value="تسوق ومستلزمات">تسوق ومستلزمات</option>
-              <option value="رواتب وإيرادات">رواتب وإيرادات</option>
-              <option value="أخرى">أخرى</option>
-            </select>
+            <p class="text-xs font-semibold text-slate-500">القيمة الحالية للأصول</p>
+            <h3 id="assets-current-value" class="text-2xl font-black text-emerald-600 mt-1">0.00 ر.س</h3>
           </div>
+          <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
+            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+          </div>
+        </div>
 
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1">التاريخ</label>
-            <input type="date" id="tx-date" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
+            <p class="text-xs font-semibold text-slate-500">إجمالي الربح / الخسارة</p>
+            <h3 id="assets-net-profit" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
           </div>
-
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            حفظ المعاملة
-          </button>
-        </form>
+          <div id="profit-icon-bg" class="bg-slate-100 p-3 rounded-xl text-slate-700">
+            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          </div>
+        </div>
       </div>
 
-      <!-- RIGHT COLUMN: CHART & TRANSACTIONS LIST -->
-      <div class="lg:col-span-2 space-y-6">
+      <!-- ASSETS FORM & LIST -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <!-- ADD ASSET FORM -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit">
           <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
-            توزيع المصاريف حسب التصنيف
+            <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
+            إضافة أصل جديد
           </h2>
-          <div class="h-56 relative flex items-center justify-center">
-            <canvas id="expenseChart"></canvas>
-          </div>
+          <form id="asset-form" class="space-y-4" onsubmit="handleAddAsset(event)">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">اسم الأصل</label>
+              <input type="text" id="asset-name" required placeholder="مثال: أسهم الراجحي، ذهب، شقة..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">التصنيف</label>
+              <select id="asset-category" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
+                <option value="أسهم واستثمار">أسهم واستثمار</option>
+                <option value="عقارات وأراضي">عقارات وأراضي</option>
+                <option value="ذهب ومعادن">ذهب ومعادن</option>
+                <option value="حساب ادخاري/وديعة">حساب ادخاري/وديعة</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">تكلفة الشراء الأصلي (ر.س)</label>
+              <input type="number" id="asset-buy-price" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">القيمة السوقية الحالية (ر.س)</label>
+              <input type="number" id="asset-current-price" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+            </div>
+
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              حفظ الأصل
+            </button>
+          </form>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <i data-lucide="list" class="w-5 h-5 text-emerald-600"></i>
-              سجل المعاملات
-            </h2>
-            <button onclick="clearAllData()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              مسح الكل
-            </button>
-          </div>
+        <!-- ASSETS LIST -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="briefcase" class="w-5 h-5 text-emerald-600"></i>
+                قائمة الأصول والتغير في القيمة
+              </h2>
+              <button onclick="clearAllAssets()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                مسح الأصول
+              </button>
+            </div>
 
-          <div id="transactions-list" class="space-y-3"></div>
+            <div id="assets-list" class="space-y-3"></div>
+          </div>
         </div>
 
       </div>
-
     </div>
 
   </main>
 
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    <p>تطبيق مصروفي &copy; 2026 - إدارة مصاريف وحسابات معربة بالكامل</p>
+    <p>تطبيق مصاريف &copy; 2026 - إدارة المصاريف ومتابعة محفظة الأصول</p>
   </footer>
 
   <!-- INSTALL PWA MODAL -->
@@ -213,7 +329,7 @@
           <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
             <li>اضغط على زر <strong>المشاركة (Share)</strong> بالأسفل.</li>
             <li>اختر <strong>"الإضافة إلى الشاشة الرئيسية"</strong>.</li>
-            <li>ستجد الاسم تلقائياً <strong>"مصروفي"</strong>، اضغط <strong>إضافة</strong>.</li>
+            <li>ستجد الاسم تلقائياً <strong>"مصاريف"</strong>، اضغط <strong>إضافة</strong>.</li>
           </ol>
         </div>
 
@@ -237,12 +353,34 @@
 
   <script>
     let transactions = JSON.parse(localStorage.getItem('my_expenses')) || [];
+    let assets = JSON.parse(localStorage.getItem('my_assets')) || [];
     let currentType = 'expense';
     let chartInstance = null;
 
     document.getElementById('tx-date').valueAsDate = new Date();
     lucide.createIcons();
 
+    // TABS SWITCHING
+    function switchTab(tab) {
+      const expSec = document.getElementById('section-expenses');
+      const assSec = document.getElementById('section-assets');
+      const btnExp = document.getElementById('tab-btn-expenses');
+      const btnAss = document.getElementById('tab-btn-assets');
+
+      if (tab === 'expenses') {
+        expSec.classList.remove('hidden');
+        assSec.classList.add('hidden');
+        btnExp.className = "flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2 shadow-sm";
+        btnAss.className = "flex-1 py-2.5 text-xs font-bold rounded-lg transition-all text-slate-300 hover:text-white flex items-center justify-center gap-2";
+      } else {
+        assSec.classList.remove('hidden');
+        expSec.classList.add('hidden');
+        btnAss.className = "flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2 shadow-sm";
+        btnExp.className = "flex-1 py-2.5 text-xs font-bold rounded-lg transition-all text-slate-300 hover:text-white flex items-center justify-center gap-2";
+      }
+    }
+
+    // EXPENSES LOGIC
     function setTransactionType(type) {
       currentType = type;
       const btnExpense = document.getElementById('btn-type-expense');
@@ -266,9 +404,8 @@
 
       if (!title || isNaN(amount)) return;
 
-      const newTx = { id: Date.now(), title, amount, category, date, type: currentType };
-      transactions.unshift(newTx);
-      saveAndRender();
+      transactions.unshift({ id: Date.now(), title, amount, category, date, type: currentType });
+      saveAndRenderExpenses();
 
       document.getElementById('tx-title').value = '';
       document.getElementById('tx-amount').value = '';
@@ -276,17 +413,17 @@
 
     function deleteTransaction(id) {
       transactions = transactions.filter(t => t.id !== id);
-      saveAndRender();
+      saveAndRenderExpenses();
     }
 
     function clearAllData() {
       if (confirm('هل أنت تأكد من مسح جميع المعاملات المسجلة؟')) {
         transactions = [];
-        saveAndRender();
+        saveAndRenderExpenses();
       }
     }
 
-    function saveAndRender() {
+    function saveAndRenderExpenses() {
       localStorage.setItem('my_expenses', JSON.stringify(transactions));
       renderSummary();
       renderList();
@@ -323,7 +460,7 @@
         item.className = 'flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100 hover:bg-slate-100/60 transition';
         const isExpense = t.type === 'expense';
         const colorClass = isExpense ? 'text-rose-600 bg-rose-100/50' : 'text-emerald-600 bg-emerald-100/50';
-        const iconName = isExpense ? 'arrow-down-left' : 'arrow-up-right';
+        const iconName = isExpense ? 'arrow-up-right' : 'arrow-down-left';
 
         item.innerHTML = `
           <div class="flex items-center gap-3">
@@ -377,6 +514,138 @@
       });
     }
 
+    // ASSETS LOGIC
+    function handleAddAsset(e) {
+      e.preventDefault();
+      const name = document.getElementById('asset-name').value;
+      const category = document.getElementById('asset-category').value;
+      const buyPrice = parseFloat(document.getElementById('asset-buy-price').value);
+      const currentPrice = parseFloat(document.getElementById('asset-current-price').value);
+
+      if (!name || isNaN(buyPrice) || isNaN(currentPrice)) return;
+
+      assets.unshift({ id: Date.now(), name, category, buyPrice, currentPrice });
+      saveAndRenderAssets();
+
+      document.getElementById('asset-name').value = '';
+      document.getElementById('asset-buy-price').value = '';
+      document.getElementById('asset-current-price').value = '';
+    }
+
+    function updateAssetCurrentPrice(id, newPrice) {
+      const priceVal = parseFloat(newPrice);
+      if (isNaN(priceVal)) return;
+      assets = assets.map(a => a.id === id ? { ...a, currentPrice: priceVal } : a);
+      saveAndRenderAssets();
+    }
+
+    function deleteAsset(id) {
+      assets = assets.filter(a => a.id !== id);
+      saveAndRenderAssets();
+    }
+
+    function clearAllAssets() {
+      if (confirm('هل أنت تأكد من مسح جميع الأصول المسجلة؟')) {
+        assets = [];
+        saveAndRenderAssets();
+      }
+    }
+
+    function saveAndRenderAssets() {
+      localStorage.setItem('my_assets', JSON.stringify(assets));
+      renderAssetsSummary();
+      renderAssetsList();
+    }
+
+    function renderAssetsSummary() {
+      const totalCost = assets.reduce((acc, a) => acc + a.buyPrice, 0);
+      const totalCurrent = assets.reduce((acc, a) => acc + a.currentPrice, 0);
+      const netProfit = totalCurrent - totalCost;
+
+      document.getElementById('assets-total-cost').textContent = `${totalCost.toFixed(2)} ر.س`;
+      document.getElementById('assets-current-value').textContent = `${totalCurrent.toFixed(2)} ر.س`;
+
+      const profitEl = document.getElementById('assets-net-profit');
+      const profitIconBg = document.getElementById('profit-icon-bg');
+
+      if (netProfit > 0) {
+        profitEl.textContent = `+${netProfit.toFixed(2)} ر.س`;
+        profitEl.className = 'text-2xl font-black text-emerald-600 mt-1';
+        profitIconBg.className = 'bg-emerald-50 p-3 rounded-xl text-emerald-600';
+      } else if (netProfit < 0) {
+        profitEl.textContent = `${netProfit.toFixed(2)} ر.س`;
+        profitEl.className = 'text-2xl font-black text-rose-600 mt-1';
+        profitIconBg.className = 'bg-rose-50 p-3 rounded-xl text-rose-600';
+      } else {
+        profitEl.textContent = `0.00 ر.س`;
+        profitEl.className = 'text-2xl font-black text-slate-900 mt-1';
+        profitIconBg.className = 'bg-slate-100 p-3 rounded-xl text-slate-700';
+      }
+    }
+
+    function renderAssetsList() {
+      const listEl = document.getElementById('assets-list');
+      listEl.innerHTML = '';
+
+      if (assets.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-8 text-slate-400">
+            <i data-lucide="briefcase" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+            <p class="text-xs">لا توجد أصول أو استثمارات مسجلة حتى الآن</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      assets.forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3';
+        
+        const diff = a.currentPrice - a.buyPrice;
+        const percentage = a.buyPrice > 0 ? ((diff / a.buyPrice) * 100).toFixed(1) : 0;
+        const isProfit = diff >= 0;
+
+        const badgeClass = isProfit ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700';
+        const diffSign = isProfit ? '+' : '';
+
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="text-sm font-bold text-slate-900">${a.name}</h4>
+              <p class="text-[11px] text-slate-400">${a.category}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-2.5 py-1 rounded-full font-bold ${badgeClass}">
+                ${diffSign}${diff.toFixed(2)} ر.س (${diffSign}${percentage}%)
+              </span>
+              <button onclick="deleteAsset(${a.id})" class="text-slate-300 hover:text-rose-500 p-1 transition">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-slate-200/60">
+            <div>
+              <span class="text-slate-400 block text-[10px]">تكلفة الشراء:</span>
+              <span class="font-bold text-slate-700">${a.buyPrice.toFixed(2)} ر.س</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">القيمة الحالية:</span>
+              <div class="flex items-center gap-1">
+                <input type="number" value="${a.currentPrice}" onchange="updateAssetCurrentPrice(${a.id}, this.value)" class="w-24 text-xs px-2 py-1 rounded border border-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-bold bg-white">
+                <span class="text-slate-500 text-[10px]">ر.س</span>
+              </div>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(item);
+      });
+
+      lucide.createIcons();
+    }
+
+    // MODAL
     function openInstallModal() {
       document.getElementById('install-modal').classList.add('flex');
       document.getElementById('install-modal').classList.remove('hidden');
@@ -391,7 +660,9 @@
       document.getElementById('pwa-banner').style.display = 'none';
     }
 
-    saveAndRender();
+    // INITIAL RENDER
+    saveAndRenderExpenses();
+    saveAndRenderAssets();
   </script>
 </body>
 </html>
