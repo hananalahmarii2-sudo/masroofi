@@ -53,7 +53,7 @@
         </div>
         <div>
           <h1 class="text-2xl font-extrabold tracking-wide text-white">مصاريف</h1>
-          <p class="text-xs text-slate-400">متابعة الأصول وحركاتها المالية تلقائياً</p>
+          <p class="text-xs text-slate-400">إدارة الأصول وحركاتها المالية</p>
         </div>
       </div>
       <button onclick="openInstallModal()" id="header-install-btn" class="hidden md:flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 transition">
@@ -62,16 +62,16 @@
       </button>
     </div>
 
-    <!-- TABS -->
+    <!-- TABS (Assets is FIRST by default) -->
     <div class="max-w-4xl mx-auto px-4 mt-6">
       <div class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
         <button id="tab-btn-assets" onclick="switchTab('assets')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2 shadow-sm">
           <i data-lucide="briefcase" class="w-4 h-4"></i>
-          1. قائمة الأصول وتفاصيلها
+          1. الأصول (الرئيسية)
         </button>
         <button id="tab-btn-expenses" onclick="switchTab('expenses')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all text-slate-300 hover:text-white flex items-center justify-center gap-2">
           <i data-lucide="receipt" class="w-4 h-4"></i>
-          2. تسجيل مصروف أو دخل للأصل
+          2. تسجيل مصروف / دخل
         </button>
       </div>
     </div>
@@ -80,14 +80,13 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
 
-    <!-- ==================== SECTION 1: ASSETS LIST (WITH DETAILED MOVEMENTS) ==================== -->
+    <!-- ==================== SECTION 1: ASSETS (DEFAULT HOME) ==================== -->
     <div id="section-assets" class="space-y-6">
       
-      <!-- SUMMARY TOP -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500">إجمالي قيم الأصول المسجلة</p>
+            <p class="text-xs font-semibold text-slate-500">إجمالي قيم الأصول الأساسية</p>
             <h3 id="assets-total-value" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
           </div>
           <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
@@ -97,7 +96,7 @@
 
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500">عدد الأصول النشطة</p>
+            <p class="text-xs font-semibold text-slate-500">عدد الأصول المسجلة</p>
             <h3 id="assets-count" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
           </div>
           <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
@@ -106,14 +105,13 @@
         </div>
       </div>
 
-      <!-- ADD ASSET & ASSETS CARDS GRID -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- FORM TO ADD ASSET -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit space-y-4">
           <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
             <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
-            إضافة أصل جديد
+            تسجيل أصل جديد
           </h2>
           <form id="asset-form" class="space-y-4" onsubmit="handleAddAsset(event)">
             <div>
@@ -133,12 +131,12 @@
           </form>
         </div>
 
-        <!-- ASSETS DETAILED CARDS LIST -->
+        <!-- ASSETS CARDS WITH RED/GREEN BOXES -->
         <div class="lg:col-span-2 space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
             <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
               <i data-lucide="list-tree" class="w-5 h-5 text-emerald-600"></i>
-              قائمة الأصول وحركاتها التفصيلية (دخل وصرف)
+              قائمة الأصول وحركاتها المباشرة
             </h2>
             <div id="assets-detailed-list" class="space-y-4"></div>
           </div>
@@ -148,10 +146,9 @@
     </div>
 
 
-    <!-- ==================== SECTION 2: TRANSACTIONS (INCOME & EXPENSE) ==================== -->
+    <!-- ==================== SECTION 2: TRANSACTIONS ==================== -->
     <div id="section-expenses" class="space-y-6 hidden">
 
-      <!-- TRANSACTIONS FORM & LIST -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <!-- TRANSACTION FORM -->
@@ -171,9 +168,9 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">اختر الأصل (من أصولك المسجلة)</label>
+              <label class="block text-xs font-bold text-slate-600 mb-1">اختر الأصل (من القائمة المسجلة)</label>
               <select id="tx-asset-select" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white font-bold">
-                <!-- Filled dynamically -->
+                <!-- Filled dynamically from assets -->
               </select>
             </div>
 
@@ -183,8 +180,8 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">وصف العملية (اختياري)</label>
-              <input type="text" id="tx-note" placeholder="مثال: قطع غيار، صيانة، إيجار..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-bold text-slate-600 mb-1">ملاحظة (اختياري)</label>
+              <input type="text" id="tx-note" placeholder="مثال: صيانة، إيجار..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
             <div>
@@ -194,12 +191,12 @@
 
             <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
               <i data-lucide="check" class="w-4 h-4"></i>
-              حفظ العملية للأصل
+              حفظ العملية
             </button>
           </form>
         </div>
 
-        <!-- ALL TRANSACTIONS LIST -->
+        <!-- TRANSACTIONS LIST -->
         <div class="lg:col-span-2 space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex items-center justify-between mb-4">
@@ -222,7 +219,7 @@
   </main>
 
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    <p>تطبيق مصاريف &copy; 2026 - تتبع الأصول والعمليات بكل فاعلية</p>
+    <p>تطبيق مصاريف &copy; 2026 - تتبع الأصول بكل دقة</p>
   </footer>
 
   <!-- INSTALL PWA MODAL -->
@@ -272,14 +269,14 @@
   </div>
 
   <script>
-    let assets = JSON.parse(localStorage.getItem('my_assets_v3')) || [];
-    let transactions = JSON.parse(localStorage.getItem('my_transactions_v3')) || [];
+    let assets = JSON.parse(localStorage.getItem('my_assets_v4')) || [];
+    let transactions = JSON.parse(localStorage.getItem('my_transactions_v4')) || [];
     let currentType = 'expense';
 
     document.getElementById('tx-date').valueAsDate = new Date();
     lucide.createIcons();
 
-    // TABS SWITCHING
+    // TABS SWITCHING (Assets is default home)
     function switchTab(tab) {
       const expSec = document.getElementById('section-expenses');
       const assSec = document.getElementById('section-assets');
@@ -367,8 +364,8 @@
 
     // SAVE & RENDER
     function saveAndRender() {
-      localStorage.setItem('my_assets_v3', JSON.stringify(assets));
-      localStorage.setItem('my_transactions_v3', JSON.stringify(transactions));
+      localStorage.setItem('my_assets_v4', JSON.stringify(assets));
+      localStorage.setItem('my_transactions_v4', JSON.stringify(transactions));
 
       renderAssetSelectOptions();
       renderAssetsDetailedList();
@@ -381,7 +378,7 @@
       selectEl.innerHTML = '';
 
       if (assets.length === 0) {
-        selectEl.innerHTML = '<option value="">لا توجد أصول مسجلة (أضف أصلاً أولاً)</option>';
+        selectEl.innerHTML = '<option value="">لا توجد أصول مسجلة (أضف أصلاً في الصفحة الرئيسية أولاً)</option>';
         return;
       }
 
@@ -401,7 +398,7 @@
         listEl.innerHTML = `
           <div class="text-center py-8 text-slate-400">
             <i data-lucide="briefcase" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
-            <p class="text-xs">لم تقم بإضافة أي أصول بعد. أضف أصلك الأول من النموذج (مثل: شيول).</p>
+            <p class="text-xs">لم تقم بإضافة أي أصول بعد. أضف أصلك الأول (مثل: شيول) من النموذج جانبك.</p>
           </div>
         `;
         lucide.createIcons();
@@ -417,12 +414,11 @@
         const isProfitable = netProfit >= 0;
         const netBadgeClass = isProfitable ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
 
-        // Build the sub-list of transactions for this specific asset
         let txRowsHTML = '';
         if (assetTx.length === 0) {
-          txRowsHTML = `<p class="text-xs text-slate-400 italic py-2">لا توجد عمليات مسجلة على هذا الأصل حتى الآن.</p>`;
+          txRowsHTML = `<p class="text-xs text-slate-400 italic py-1">لا توجد حركات مسجلة على هذا الأصل بعد.</p>`;
         } else {
-          txRowsHTML = `<div class="space-y-2 mt-2">`;
+          txRowsHTML = `<div class="space-y-1.5 mt-2">`;
           assetTx.forEach(t => {
             const isInc = t.type === 'income';
             const sign = isInc ? '+' : '-';
@@ -456,27 +452,27 @@
               <span class="text-xs font-bold px-3 py-1 rounded-full ${netBadgeClass}">
                 الصافي: ${netProfit >= 0 ? '+' : ''}${netProfit.toFixed(2)} ر.س
               </span>
-              <button onclick="deleteAsset(${a.id})" class="text-slate-300 hover:text-rose-500 p-1 transition" title="حذف الأصل بالكامل">
+              <button onclick="deleteAsset(${a.id})" class="text-slate-300 hover:text-rose-500 p-1 transition" title="حذف الأصل">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
 
-          <!-- Quick Totals for this asset -->
+          <!-- Red and Green Boxes ( كم دخل وكم صرف ) -->
           <div class="grid grid-cols-2 gap-3 text-center">
-            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
-              <span class="text-[11px] font-bold text-emerald-700 block">إجمالي ما دَخَل (+)</span>
-              <span class="text-sm font-black text-emerald-600">+${totalIncome.toFixed(2)} ر.س</span>
+            <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200">
+              <span class="text-[11px] font-bold text-emerald-700 block mb-0.5">كم دخل منه (+)</span>
+              <span class="text-base font-black text-emerald-600">+${totalIncome.toFixed(2)} ر.س</span>
             </div>
-            <div class="bg-rose-50/60 p-2.5 rounded-xl border border-rose-100">
-              <span class="text-[11px] font-bold text-rose-700 block">إجمالي ما صُرِف (-)</span>
-              <span class="text-sm font-black text-rose-600">-${totalExpense.toFixed(2)} ر.س</span>
+            <div class="bg-rose-50/80 p-3 rounded-xl border border-rose-200">
+              <span class="text-[11px] font-bold text-rose-700 block mb-0.5">كم صُرِف عليه (-)</span>
+              <span class="text-base font-black text-rose-600">-${totalExpense.toFixed(2)} ر.س</span>
             </div>
           </div>
 
-          <!-- Sub-list of movements -->
+          <!-- Sub-list -->
           <div>
-            <p class="text-xs font-bold text-slate-700 mb-1">العمليات المسجلة تحت هذا الأصل:</p>
+            <p class="text-xs font-bold text-slate-700 mb-1">تفاصيل العمليات:</p>
             ${txRowsHTML}
           </div>
         `;
@@ -493,7 +489,7 @@
       if (transactions.length === 0) {
         listEl.innerHTML = `
           <div class="text-center py-6 text-slate-400">
-            <p class="text-xs">لا توجد عمليات مسجلة عامة</p>
+            <p class="text-xs">لا توجد عمليات مسجلة</p>
           </div>
         `;
         return;
