@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مصاريف - إدارة الأصول والحسابات</title>
+  <title>مصاريف - إدارة الأصول والعمليات</title>
   
   <!-- PWA Settings -->
   <link rel="manifest" href="manifest.json">
@@ -44,7 +44,7 @@
     </div>
   </div>
 
-  <!-- HEADER & NAVIGATION -->
+  <!-- HEADER & NAVIGATION TABS -->
   <header class="bg-slate-900 text-white pt-6 pb-4 shadow-lg">
     <div class="max-w-4xl mx-auto px-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -53,7 +53,7 @@
         </div>
         <div>
           <h1 class="text-2xl font-extrabold tracking-wide text-white">مصاريف</h1>
-          <p class="text-xs text-slate-400">متابعة إيرادات ومصاريف الأصول</p>
+          <p class="text-xs text-slate-400">متابعة الأصول وحركاتها المالية تلقائياً</p>
         </div>
       </div>
       <button onclick="openInstallModal()" id="header-install-btn" class="hidden md:flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-700 transition">
@@ -62,16 +62,16 @@
       </button>
     </div>
 
-    <!-- MAIN TABS -->
+    <!-- TABS -->
     <div class="max-w-4xl mx-auto px-4 mt-6">
       <div class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
-        <button id="tab-btn-assets" onclick="switchTab('assets')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2">
+        <button id="tab-btn-assets" onclick="switchTab('assets')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-slate-950 flex items-center justify-center gap-2 shadow-sm">
           <i data-lucide="briefcase" class="w-4 h-4"></i>
-          1. إدارة الأصول وتقييم الأداء
+          1. قائمة الأصول وتفاصيلها
         </button>
         <button id="tab-btn-expenses" onclick="switchTab('expenses')" class="flex-1 py-2.5 text-xs font-bold rounded-lg transition-all text-slate-300 hover:text-white flex items-center justify-center gap-2">
           <i data-lucide="receipt" class="w-4 h-4"></i>
-          2. تسجيل عمليات الأصول
+          2. تسجيل مصروف أو دخل للأصل
         </button>
       </div>
     </div>
@@ -80,24 +80,14 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
 
-    <!-- ==================== SECTION 1: ASSETS MANAGEMENT ==================== -->
+    <!-- ==================== SECTION 1: ASSETS LIST (WITH DETAILED MOVEMENTS) ==================== -->
     <div id="section-assets" class="space-y-6">
-
-      <!-- ASSETS OVERVIEW -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- SUMMARY TOP -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500">عدد الأصول المسجلة</p>
-            <h3 id="assets-count" class="text-2xl font-black text-slate-900 mt-1">0</h3>
-          </div>
-          <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
-            <i data-lucide="boxes" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500">إجمالي القيم التقديرية للأصول</p>
+            <p class="text-xs font-semibold text-slate-500">إجمالي قيم الأصول المسجلة</p>
             <h3 id="assets-total-value" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
           </div>
           <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
@@ -107,32 +97,32 @@
 
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
           <div>
-            <p class="text-xs font-semibold text-slate-500">صافي العائد الكلي للأصول</p>
-            <h3 id="assets-total-net" class="text-2xl font-black text-emerald-600 mt-1">0.00 ر.س</h3>
+            <p class="text-xs font-semibold text-slate-500">عدد الأصول النشطة</p>
+            <h3 id="assets-count" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
           </div>
-          <div id="profit-icon-bg" class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
-            <i data-lucide="trending-up" class="w-6 h-6"></i>
+          <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
+            <i data-lucide="boxes" class="w-6 h-6"></i>
           </div>
         </div>
       </div>
 
-      <!-- ASSETS FORM & CARDS -->
+      <!-- ADD ASSET & ASSETS CARDS GRID -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- ADD ASSET FORM -->
+        <!-- FORM TO ADD ASSET -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit space-y-4">
           <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
             <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
-            تسجيل أصل جديد
+            إضافة أصل جديد
           </h2>
           <form id="asset-form" class="space-y-4" onsubmit="handleAddAsset(event)">
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">اسم الأصل</label>
-              <input type="text" id="asset-name" required placeholder="مثال: شقة جدة، أسهم الراجحي، متجر..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-bold text-slate-600 mb-1">اسم الأصل (مثال: شيول)</label>
+              <input type="text" id="asset-name" required placeholder="اكتب اسم الأصل..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">القيمة الإجمالية للأصل (ر.س)</label>
+              <label class="block text-xs font-bold text-slate-600 mb-1">القيمة التقديرية (ر.س)</label>
               <input type="number" id="asset-value" step="0.01" required placeholder="0.00" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
@@ -143,17 +133,14 @@
           </form>
         </div>
 
-        <!-- ASSETS DETAILED PERFORMANCE LIST -->
+        <!-- ASSETS DETAILED CARDS LIST -->
         <div class="lg:col-span-2 space-y-6">
-          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <i data-lucide="pie-chart" class="w-5 h-5 text-emerald-600"></i>
-                أداء الأصول (كم دخل وكم صرفت على كل أصل)
-              </h2>
-            </div>
-
-            <div id="assets-list" class="space-y-4"></div>
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="list-tree" class="w-5 h-5 text-emerald-600"></i>
+              قائمة الأصول وحركاتها التفصيلية (دخل وصرف)
+            </h2>
+            <div id="assets-detailed-list" class="space-y-4"></div>
           </div>
         </div>
 
@@ -164,62 +151,29 @@
     <!-- ==================== SECTION 2: TRANSACTIONS (INCOME & EXPENSE) ==================== -->
     <div id="section-expenses" class="space-y-6 hidden">
 
-      <!-- SUMMARY CARDS -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500">إجمالي الدخل المسجل</p>
-            <h3 id="total-income" class="text-2xl font-black text-emerald-600 mt-1">+0.00 ر.س</h3>
-          </div>
-          <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600">
-            <i data-lucide="arrow-down-left" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500">إجمالي المصاريف المسجلة</p>
-            <h3 id="total-expenses" class="text-2xl font-black text-rose-600 mt-1">-0.00 ر.س</h3>
-          </div>
-          <div class="bg-rose-50 p-3 rounded-xl text-rose-600">
-            <i data-lucide="arrow-up-right" class="w-6 h-6"></i>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-slate-500">الرصيد المتبقي</p>
-            <h3 id="net-balance" class="text-2xl font-black text-slate-900 mt-1">0.00 ر.س</h3>
-          </div>
-          <div class="bg-slate-100 p-3 rounded-xl text-slate-700">
-            <i data-lucide="scale" class="w-6 h-6"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- MAIN CONTENT GRID -->
+      <!-- TRANSACTIONS FORM & LIST -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        <!-- FORM -->
+        <!-- TRANSACTION FORM -->
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-1 h-fit space-y-4">
           <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-600"></i>
-            تسجيل عملية لأصل
+            <i data-lucide="receipt" class="w-5 h-5 text-emerald-600"></i>
+            تسجيل مصروف أو دخل لأصل
           </h2>
           
           <form id="transaction-form" class="space-y-4" onsubmit="handleAddTransaction(event)">
             <div>
               <label class="block text-xs font-bold text-slate-600 mb-1.5">نوع العملية</label>
               <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
-                <button type="button" id="btn-type-income" onclick="setTransactionType('income')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white text-emerald-600 shadow-sm">دخل / إيراد (+)</button>
-                <button type="button" id="btn-type-expense" onclick="setTransactionType('expense')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500">مصروف (-)</button>
+                <button type="button" id="btn-type-expense" onclick="setTransactionType('expense')" class="py-2 text-xs font-bold rounded-lg transition-all bg-white text-rose-600 shadow-sm">مصروف (-)</button>
+                <button type="button" id="btn-type-income" onclick="setTransactionType('income')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-500">دخل / إيراد (+)</button>
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">اختر الأصل</label>
+              <label class="block text-xs font-bold text-slate-600 mb-1">اختر الأصل (من أصولك المسجلة)</label>
               <select id="tx-asset-select" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white font-bold">
-                <!-- Dynamically filled with user's assets -->
+                <!-- Filled dynamically -->
               </select>
             </div>
 
@@ -229,8 +183,8 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1">ملاحظة / وصف العمل (اختياري)</label>
-              <input type="text" id="tx-note" placeholder="مثال: إيجار شهر يوليو، صيانة..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+              <label class="block text-xs font-bold text-slate-600 mb-1">وصف العملية (اختياري)</label>
+              <input type="text" id="tx-note" placeholder="مثال: قطع غيار، صيانة، إيجار..." class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
             </div>
 
             <div>
@@ -240,18 +194,18 @@
 
             <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
               <i data-lucide="check" class="w-4 h-4"></i>
-              حفظ العملية
+              حفظ العملية للأصل
             </button>
           </form>
         </div>
 
-        <!-- TRANSACTIONS LIST -->
+        <!-- ALL TRANSACTIONS LIST -->
         <div class="lg:col-span-2 space-y-6">
           <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div class="flex items-center justify-between mb-4">
               <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <i data-lucide="list" class="w-5 h-5 text-emerald-600"></i>
-                سجل العمليات المالية للأصول
+                سجل العمليات العام
               </h2>
               <button onclick="clearAllTransactions()" class="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -268,7 +222,7 @@
   </main>
 
   <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
-    <p>تطبيق مصاريف &copy; 2026 - إدارة أداء ومردود الأصول</p>
+    <p>تطبيق مصاريف &copy; 2026 - تتبع الأصول والعمليات بكل فاعلية</p>
   </footer>
 
   <!-- INSTALL PWA MODAL -->
@@ -318,9 +272,9 @@
   </div>
 
   <script>
-    let assets = JSON.parse(localStorage.getItem('my_assets_v2')) || [];
-    let transactions = JSON.parse(localStorage.getItem('my_transactions_v2')) || [];
-    let currentType = 'income';
+    let assets = JSON.parse(localStorage.getItem('my_assets_v3')) || [];
+    let transactions = JSON.parse(localStorage.getItem('my_transactions_v3')) || [];
+    let currentType = 'expense';
 
     document.getElementById('tx-date').valueAsDate = new Date();
     lucide.createIcons();
@@ -361,8 +315,9 @@
     }
 
     function deleteAsset(id) {
-      if (confirm('هل أنت تأكد من حذف هذا الأصل؟ (سيتم الاحتفاظ بالعمليات المسجلة سابساً)')) {
+      if (confirm('هل أنت متأكد من حذف هذا الأصل؟ (سيتم حذف العمليات المرتبطة به أيضاً)')) {
         assets = assets.filter(a => a.id !== id);
+        transactions = transactions.filter(t => t.assetId !== id);
         saveAndRender();
       }
     }
@@ -373,12 +328,12 @@
       const btnExpense = document.getElementById('btn-type-expense');
       const btnIncome = document.getElementById('btn-type-income');
 
-      if (type === 'income') {
-        btnIncome.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-emerald-600 shadow-sm';
-        btnExpense.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500';
-      } else {
+      if (type === 'expense') {
         btnExpense.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-rose-600 shadow-sm';
         btnIncome.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500';
+      } else {
+        btnIncome.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-white text-emerald-600 shadow-sm';
+        btnExpense.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-500';
       }
     }
 
@@ -386,15 +341,12 @@
       e.preventDefault();
       const assetId = parseInt(document.getElementById('tx-asset-select').value);
       const amount = parseFloat(document.getElementById('tx-amount').value);
-      const note = document.getElementById('tx-note').value;
+      const note = document.getElementById('tx-note').value.trim();
       const date = document.getElementById('tx-date').value;
 
       if (!assetId || isNaN(amount)) return;
 
-      const asset = assets.find(a => a.id === assetId);
-      const assetName = asset ? asset.name : 'أصل غير محدد';
-
-      transactions.unshift({ id: Date.now(), assetId, assetName, amount, note, date, type: currentType });
+      transactions.unshift({ id: Date.now(), assetId, amount, note, date, type: currentType });
       saveAndRender();
 
       document.getElementById('tx-amount').value = '';
@@ -407,7 +359,7 @@
     }
 
     function clearAllTransactions() {
-      if (confirm('هل أنت متأكد من مسح جميع العمليات المسجلة؟')) {
+      if (confirm('هل أنت متأكد من مسح كافة العمليات؟')) {
         transactions = [];
         saveAndRender();
       }
@@ -415,11 +367,11 @@
 
     // SAVE & RENDER
     function saveAndRender() {
-      localStorage.setItem('my_assets_v2', JSON.stringify(assets));
-      localStorage.setItem('my_transactions_v2', JSON.stringify(transactions));
+      localStorage.setItem('my_assets_v3', JSON.stringify(assets));
+      localStorage.setItem('my_transactions_v3', JSON.stringify(transactions));
 
       renderAssetSelectOptions();
-      renderAssetsList();
+      renderAssetsDetailedList();
       renderTransactionsList();
       renderSummaries();
     }
@@ -429,27 +381,27 @@
       selectEl.innerHTML = '';
 
       if (assets.length === 0) {
-        selectEl.innerHTML = '<option value="">لا توجد أصول مسجلة - يرجى إضافة أصل أولاً</option>';
+        selectEl.innerHTML = '<option value="">لا توجد أصول مسجلة (أضف أصلاً أولاً)</option>';
         return;
       }
 
       assets.forEach(a => {
         const opt = document.createElement('option');
         opt.value = a.id;
-        opt.textContent = `${a.name} (قيمة الأصل: ${a.value.toFixed(2)} ر.س)`;
+        opt.textContent = a.name;
         selectEl.appendChild(opt);
       });
     }
 
-    function renderAssetsList() {
-      const listEl = document.getElementById('assets-list');
+    function renderAssetsDetailedList() {
+      const listEl = document.getElementById('assets-detailed-list');
       listEl.innerHTML = '';
 
       if (assets.length === 0) {
         listEl.innerHTML = `
           <div class="text-center py-8 text-slate-400">
             <i data-lucide="briefcase" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
-            <p class="text-xs">لم تقم بتسجيل أي أصل بعد. أضف أصلك الأول من النموذج جانباً.</p>
+            <p class="text-xs">لم تقم بإضافة أي أصول بعد. أضف أصلك الأول من النموذج (مثل: شيول).</p>
           </div>
         `;
         lucide.createIcons();
@@ -458,44 +410,74 @@
 
       assets.forEach(a => {
         const assetTx = transactions.filter(t => t.assetId === a.id);
-        const income = assetTx.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
-        const expense = assetTx.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
-        const net = income - expense;
+        const totalIncome = assetTx.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+        const totalExpense = assetTx.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
+        const netProfit = totalIncome - totalExpense;
 
-        const isProfitable = net >= 0;
-        const statusBadge = isProfitable 
-          ? `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-full">+${net.toFixed(2)} ر.س (مربح)</span>`
-          : `<span class="bg-rose-100 text-rose-800 text-xs font-bold px-2.5 py-1 rounded-full">${net.toFixed(2)} ر.س (خسارة)</span>`;
+        const isProfitable = netProfit >= 0;
+        const netBadgeClass = isProfitable ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
+
+        // Build the sub-list of transactions for this specific asset
+        let txRowsHTML = '';
+        if (assetTx.length === 0) {
+          txRowsHTML = `<p class="text-xs text-slate-400 italic py-2">لا توجد عمليات مسجلة على هذا الأصل حتى الآن.</p>`;
+        } else {
+          txRowsHTML = `<div class="space-y-2 mt-2">`;
+          assetTx.forEach(t => {
+            const isInc = t.type === 'income';
+            const sign = isInc ? '+' : '-';
+            const color = isInc ? 'text-emerald-600' : 'text-rose-600';
+            txRowsHTML += `
+              <div class="flex items-center justify-between text-xs bg-white p-2.5 rounded-xl border border-slate-100">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold ${color}">${sign}${t.amount.toFixed(2)} ر.س</span>
+                  <span class="text-slate-600">${t.note ? '• ' + t.note : ''}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] text-slate-400">${t.date}</span>
+                  <button onclick="deleteTransaction(${t.id})" class="text-slate-300 hover:text-rose-500 transition"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                </div>
+              </div>
+            `;
+          });
+          txRowsHTML += `</div>`;
+        }
 
         const card = document.createElement('div');
-        card.className = 'p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3';
+        card.className = 'p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-4';
         card.innerHTML = `
-          <div class="flex items-center justify-between">
+          <!-- Asset Header -->
+          <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
             <div>
-              <h4 class="text-base font-extrabold text-slate-900">${a.name}</h4>
-              <p class="text-xs text-slate-400">القيمة الإجمالية للأصل: <span class="font-bold text-slate-600">${a.value.toFixed(2)} ر.س</span></p>
+              <h3 class="text-base font-black text-slate-900">${a.name}</h3>
+              <p class="text-xs text-slate-500">القيمة الأصلية: <span class="font-bold text-slate-700">${a.value.toFixed(2)} ر.س</span></p>
             </div>
             <div class="flex items-center gap-2">
-              ${statusBadge}
-              <button onclick="deleteAsset(${a.id})" class="text-slate-300 hover:text-rose-500 p-1 transition" title="حذف الأصل">
+              <span class="text-xs font-bold px-3 py-1 rounded-full ${netBadgeClass}">
+                الصافي: ${netProfit >= 0 ? '+' : ''}${netProfit.toFixed(2)} ر.س
+              </span>
+              <button onclick="deleteAsset(${a.id})" class="text-slate-300 hover:text-rose-500 p-1 transition" title="حذف الأصل بالكامل">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-200/60 text-center">
-            <div class="bg-white p-2 rounded-xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 block">إجمالي ما دخل (+)</span>
-              <span class="text-xs font-black text-emerald-600">+${income.toFixed(2)} ر.س</span>
+          <!-- Quick Totals for this asset -->
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+              <span class="text-[11px] font-bold text-emerald-700 block">إجمالي ما دَخَل (+)</span>
+              <span class="text-sm font-black text-emerald-600">+${totalIncome.toFixed(2)} ر.س</span>
             </div>
-            <div class="bg-white p-2 rounded-xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 block">إجمالي ما صُرف (-)</span>
-              <span class="text-xs font-black text-rose-600">-${expense.toFixed(2)} ر.س</span>
+            <div class="bg-rose-50/60 p-2.5 rounded-xl border border-rose-100">
+              <span class="text-[11px] font-bold text-rose-700 block">إجمالي ما صُرِف (-)</span>
+              <span class="text-sm font-black text-rose-600">-${totalExpense.toFixed(2)} ر.س</span>
             </div>
-            <div class="bg-white p-2 rounded-xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 block">الصافي الفعلي</span>
-              <span class="text-xs font-black ${isProfitable ? 'text-emerald-700' : 'text-rose-700'}">${net.toFixed(2)} ر.س</span>
-            </div>
+          </div>
+
+          <!-- Sub-list of movements -->
+          <div>
+            <p class="text-xs font-bold text-slate-700 mb-1">العمليات المسجلة تحت هذا الأصل:</p>
+            ${txRowsHTML}
           </div>
         `;
         listEl.appendChild(card);
@@ -510,39 +492,31 @@
 
       if (transactions.length === 0) {
         listEl.innerHTML = `
-          <div class="text-center py-8 text-slate-400">
-            <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
-            <p class="text-xs">لا توجد عمليات مسجلة حتى الآن</p>
+          <div class="text-center py-6 text-slate-400">
+            <p class="text-xs">لا توجد عمليات مسجلة عامة</p>
           </div>
         `;
-        lucide.createIcons();
         return;
       }
 
       transactions.forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100 hover:bg-slate-100/60 transition';
-        const isIncome = t.type === 'income';
-        const colorClass = isIncome ? 'text-emerald-600 bg-emerald-100/50' : 'text-rose-600 bg-rose-100/50';
-        const iconName = isIncome ? 'arrow-down-left' : 'arrow-up-right';
+        const asset = assets.find(a => a.id === t.assetId);
+        const assetName = asset ? asset.name : 'أصل محذوف';
+        const isInc = t.type === 'income';
 
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs';
         item.innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="p-2 rounded-lg ${colorClass}">
-              <i data-lucide="${iconName}" class="w-4 h-4"></i>
-            </div>
-            <div>
-              <p class="text-sm font-bold text-slate-800">${t.assetName} ${t.note ? `<span class="text-xs font-normal text-slate-500">(${t.note})</span>` : ''}</p>
-              <p class="text-[11px] text-slate-400">${t.date}</p>
-            </div>
+          <div>
+            <span class="font-bold text-slate-800">${assetName}</span>
+            <span class="text-slate-500">${t.note ? ' - ' + t.note : ''}</span>
+            <span class="text-[10px] text-slate-400 block">${t.date}</span>
           </div>
           <div class="flex items-center gap-3">
-            <span class="text-sm font-black ${isIncome ? 'text-emerald-600' : 'text-rose-600'}">
-              ${isIncome ? '+' : '-'}${t.amount.toFixed(2)} ر.س
+            <span class="font-black ${isInc ? 'text-emerald-600' : 'text-rose-600'}">
+              ${isInc ? '+' : '-'}${t.amount.toFixed(2)} ر.س
             </span>
-            <button onclick="deleteTransaction(${t.id})" class="text-slate-300 hover:text-rose-500 p-1 transition" title="حذف العملية">
-              <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
+            <button onclick="deleteTransaction(${t.id})" class="text-slate-300 hover:text-rose-500 transition"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
           </div>
         `;
         listEl.appendChild(item);
@@ -552,20 +526,9 @@
     }
 
     function renderSummaries() {
-      // Assets summary
       document.getElementById('assets-count').textContent = assets.length;
-      const totalAssetVal = assets.reduce((acc, a) => acc + a.value, 0);
-      document.getElementById('assets-total-value').textContent = `${totalAssetVal.toFixed(2)} ر.س`;
-
-      // Global income & expense
-      const totalInc = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
-      const totalExp = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
-      const netAll = totalInc - totalExp;
-
-      document.getElementById('total-income').textContent = `+${totalInc.toFixed(2)} ر.س`;
-      document.getElementById('total-expenses').textContent = `-${totalExp.toFixed(2)} ر.س`;
-      document.getElementById('net-balance').textContent = `${netAll.toFixed(2)} ر.س`;
-      document.getElementById('assets-total-net').textContent = `${netAll.toFixed(2)} ر.س`;
+      const totalVal = assets.reduce((acc, a) => acc + a.value, 0);
+      document.getElementById('assets-total-value').textContent = `${totalVal.toFixed(2)} ر.س`;
     }
 
     // MODAL
@@ -583,7 +546,6 @@
       document.getElementById('pwa-banner').style.display = 'none';
     }
 
-    // INITIAL RENDER
     saveAndRender();
   </script>
 </body>
